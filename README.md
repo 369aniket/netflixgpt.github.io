@@ -4,7 +4,12 @@
     - Form Validation
     - Authentication
     - Creat Sign up User Account 
-# Features
+    - Implement Sign In User Api
+    - Created Redux Store With useSlice
+    - Implemented Sign Out Feature
+    - Update Profile API Call
+    
+     #Features
 - Login/Sign Up
     - Sign In / Sign up Form
     - Redirect to Browse page
