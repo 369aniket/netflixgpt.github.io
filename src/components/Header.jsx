@@ -1,41 +1,66 @@
 import { logo_URL } from "../utils/links";
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { addUser, removeUser } from "../utils/userSlice";
+
 const Header = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector( store =>store.user)
-  const handdleSingOut = () => {
+  const location = useLocation();
+  const user = useSelector((store) => store.user);
+
+  const handleSignOut = () => {
     signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-        navigate("/");
-      })
+      .then(() => navigate("/"))
       .catch((error) => {
-        // An error happened.
+        console.error("Sign-out error:", error.message);
         navigate("/error");
       });
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(addUser({ uid, email, displayName, photoURL }));
+        if (location.pathname !== "/browse") {
+          navigate("/browse");
+        }
+      } else {
+        dispatch(removeUser());
+        if (location.pathname !== "/") {
+          navigate("/");
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [dispatch, navigate, location.pathname]);
+
+  const isLoginPage = location.pathname === "/";
+
   return (
-    <div className="relative px-8 py-2 z-10 bg-gradient-to-b from-black flex justify-between">
-      <img src={logo_URL} alt="Logo" className="w-2/12 " />
-      {
-        (user && <div className=" p-4 flex ">
-          <div className="w-14 h-14 rounded-full overflow-hidden" >
-            <img src={user?.photoURL} alt="User Image" />
+    <header className="fixed top-0 left-0 w-full z-20 bg-gradient-to-b from-black/90 via-black/60 to-transparent px-4 py-3 flex justify-between items-center">
+      <img src={logo_URL} alt="Logo" className="w-32 md:w-44" />
+      {!isLoginPage && user && (
+        <div className="flex items-center space-x-4">
+          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
+            <img src={user.photoURL} alt="User Avatar" className="w-full h-full object-cover" />
           </div>
-          <h1 className="text-white font-bold p-4">{user.displayName}</h1>
+          <span className="text-white font-medium hidden sm:block">{user.displayName}</span>
           <button
-            onClick={handdleSingOut}
-            className="w-20 h-8 bg-red-700 text-white rounded-md ml-5"
+            onClick={handleSignOut}
+            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm"
           >
             Sign Out
           </button>
-        </div>)
-      }
-    </div>
+        </div>
+      )}
+    </header>
   );
 };
 
 export default Header;
+

@@ -1,3 +1,86 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@plugin "daisyui";
+
+body{
+  background-color: #000;
+}
+
+  .custom-form{
+    position: relative;
+    padding: 1rem;
+    width: 50%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    border: 1px solid #b0afaf;
+  }
+  .custom-form label{
+    width: 100%;
+    margin: .2rem;
+  }
+  
+  .custom-form label input{
+    width:100%;
+    padding: 4px;
+    border: 1px solid #646464;
+    border-radius: 5px;
+    outline: none;
+  
+  }
+  .container{
+    width: 100%;
+
+  }
+  .heading{
+    text-align: center;
+  }
+  
+  .btn{
+    padding: 5px 20px;
+    align-self: center;
+    margin: 1rem;
+    border: none;
+    background-color: blue;
+  }
+  
+  .movie-list{
+    padding: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+  }
+  
+  .main-container{
+    background: #353535;
+    color: #fff;
+  }
+  .buttons{
+    padding: 5px 30px;
+    margin: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0  2px 1px rgb(0, 0, 0);
+    cursor: pointer;
+  
+  }
+  
+  .editBTn{
+    background-color: green;
+    color: #fff;
+  }
+  .delteBtn{
+    background-color: red;
+    color: #fff;
+  }
+  
+  .radioBtn-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+  }
